@@ -18,11 +18,13 @@ class Checksum implements Coder<Uint8List, Uint8List> {
     if (data.length < length) {
       throw Exception('Data too short for checksum');
     }
-    final payload = data.sublist(data.length - length);
-    final oldChecksum = data.sublist(0, data.length - length);
-    final newCheksum = fn(oldChecksum).sublist(0, length);
-    if (oldChecksum != newCheksum) {
-      throw 'Invalid Cheksum';
+    final payload = data.sublist(0, data.length - length);
+    final oldChecksum = data.sublist(data.length - length);
+    final newCheksum = fn(payload).sublist(0, length);
+    for (var i = 0; i < oldChecksum.length; i++) {
+      if (oldChecksum[i] != newCheksum[i]) {
+        throw Exception('Invalid checksum: ');
+      }
     }
     return payload;
   }
